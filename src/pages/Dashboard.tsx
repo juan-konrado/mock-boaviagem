@@ -1,244 +1,390 @@
-import { useState, useEffect } from 'react';
-import { api } from '../services/api';
+import { useState } from 'react';
 import { Header } from '../components/Header';
-import { FiAlertCircle, FiCheckCircle, FiCalendar, FiTrendingUp, FiDollarSign  } from 'react-icons/fi';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import { format, isSameDay } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { io } from 'socket.io-client';
+import {
+    FiCheckCircle, FiCalendar, FiTrendingUp, FiTrendingDown,
+    FiDollarSign, FiUsers, FiShoppingBag, FiAlertTriangle,
+    FiPackage, FiTrendingDown as FiLoss, FiClock, FiX
+} from 'react-icons/fi';
 
-const DESPESAS = {
-    barFixas: 6000 + 1600 + 300 + 150 + 300 + 150 + 600, // 9100
-    barVariaveis: (3000 + 3000 + 1000 + 500) * 4 + 500,  // 30500
-    barLimpeza: 250 + 32 + 30 + 100 + 60 + 100,          // 572
-    casaFixas: 2700 + 250 + 150 + 100 + 150 + 500 + 1200 + 500 + 250 + 400 + (480 * 4) // 8120
+// ==========================================
+// 🟢 BANCO DE DADOS FICTÍCIO (MOCK DB)
+// ==========================================
+const MOCK_DB = {
+    hoje: {
+        kpis: { fat: 1250.00, fatCresc: 5.2, lucro: 420.00, lucroCresc: 2.1, ticket: 45.00, ticketCresc: 1.5, clientes: 28, cliCresc: 3.0 },
+        produtos: [
+            { id: 1, nome: "Almoço Executivo", vendas: 15, receita: 450, status: 'volume' },
+            { id: 2, nome: "Coca-Cola Lata", vendas: 12, receita: 72, status: 'lucrativo' },
+            { id: 3, nome: "Pudim", vendas: 5, receita: 60, status: 'lucrativo' },
+        ]
+    },
+    ontem: {
+        kpis: { fat: 980.00, fatCresc: -12.0, lucro: 310.00, lucroCresc: -15.0, ticket: 42.60, ticketCresc: -5.0, clientes: 23, cliCresc: -8.0 },
+        produtos: [
+            { id: 4, nome: "X-Salada", vendas: 10, receita: 250, status: 'volume' },
+            { id: 5, nome: "Suco Natural", vendas: 8, receita: 80, status: 'lucrativo' },
+            { id: 2, nome: "Coca-Cola Lata", vendas: 7, receita: 42, status: 'lucrativo' },
+        ]
+    },
+    semana: {
+        kpis: { fat: 8450.00, fatCresc: 8.5, lucro: 2800.00, lucroCresc: 10.2, ticket: 65.00, ticketCresc: 4.1, clientes: 130, cliCresc: 5.0 },
+        produtos: [
+            { id: 1, nome: "X-Burger Duplo", vendas: 45, receita: 1575, status: 'lucrativo' },
+            { id: 6, nome: "Porção de Fritas", vendas: 38, receita: 1140, status: 'lucrativo' },
+            { id: 7, nome: "Chopp Artesanal", vendas: 80, receita: 1200, status: 'volume' },
+        ]
+    },
+    mes: {
+        kpis: { fat: 48250.00, fatCresc: 12.5, lucro: 12400.00, lucroCresc: 8.2, ticket: 85.50, ticketCresc: -2.1, clientes: 564, cliCresc: 15.0 },
+        produtos: [
+            { id: 1, nome: "X-Burger Duplo", vendas: 120, receita: 4200, status: 'lucrativo' },
+            { id: 8, nome: "Heineken 600ml", vendas: 95, receita: 1805, status: 'volume' },
+            { id: 9, nome: "Batata Frita Cheddar", vendas: 81, receita: 2835, status: 'lucrativo' },
+            { id: 10, nome: "Caipirinha Limão", vendas: 65, receita: 1625, status: 'volume' },
+        ]
+    },
+    ano: {
+        kpis: { fat: 540200.00, fatCresc: 22.4, lucro: 150800.00, lucroCresc: 18.5, ticket: 78.00, ticketCresc: 5.5, clientes: 6925, cliCresc: 12.0 },
+        produtos: [
+            { id: 8, nome: "Heineken 600ml", vendas: 1240, receita: 23560, status: 'volume' },
+            { id: 1, nome: "X-Burger Duplo", vendas: 980, receita: 34300, status: 'lucrativo' },
+            { id: 6, nome: "Porção de Fritas", vendas: 850, receita: 25500, status: 'lucrativo' },
+        ]
+    }
 };
 
-const CUSTO_TOTAL_MES = DESPESAS.barFixas + DESPESAS.barVariaveis + DESPESAS.barLimpeza + DESPESAS.casaFixas; // R$ 48.292
+const MOCK_ALERTAS = {
+    estoque: [
+        { id: 1, item: 'Bacon Fatiado', nivel: 'Restam 1.5kg', status: 'critico' },
+        { id: 2, item: 'Cerveja IPA', nivel: '12 un', status: 'baixo' }
+    ],
+    margemBaixa: [
+        { id: 3, item: 'Gin Tônica', margem: '15% (Ideal > 30%)', motivo: 'Custo do limão subiu' },
+        { id: 4, item: 'Combo Família', margem: '18%', motivo: 'Desconto agressivo' }
+    ],
+    parados: [
+        { id: 5, item: 'Vinho Tinto Seco', dias: '32 dias sem vendas' },
+        { id: 6, item: 'Água Tônica', dias: '15 dias sem vendas' }
+    ]
+};
 
-type Venda = {
-    data: Date;
-    valor: number;
-}
+// ==========================================
+// COMPONENTES DE MODAL
+// ==========================================
+const ModalOverlay = ({ isOpen, onClose, title, children }: any) => {
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[85vh]">
+                <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">{title}</h2>
+                    <button onClick={onClose} className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-full transition-colors">
+                        <FiX size={24} />
+                    </button>
+                </div>
+                <div className="p-6 overflow-y-auto">
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ==========================================
+// PÁGINA PRINCIPAL
+// ==========================================
+type PeriodoTipo = 'hoje' | 'ontem' | 'semana' | 'mes' | 'ano' | 'custom';
 
 export default function Dashboard() {
-    const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-    const [vendasReais, setVendasReais] = useState<Venda[]>([]);
+    const [periodoAtivo, setPeriodoAtivo] = useState<PeriodoTipo>('mes');
+    const [showCustomDates, setShowCustomDates] = useState(false);
 
-    async function loadSales() {
-        try {
-            const response = await api.get('/sales');
+    // Controles de Modais
+    const [isProdutosModalOpen, setProdutosModalOpen] = useState(false);
+    const [isEstoqueModalOpen, setEstoqueModalOpen] = useState(false);
 
-            const vendasFormatadas = response.data.map((item: { date: string, total: number }) => {
-                const [year, month, day] = item.date.split('-');
-                return {
-                    data: new Date(Number(year), Number(month) - 1, Number(day)),
-                    valor: item.total
-                }
-            });
+    // Selecionador de Dados Dinâmico
+    const currentData = periodoAtivo === 'custom' ? MOCK_DB['mes'] : MOCK_DB[periodoAtivo];
 
-            setVendasReais(vendasFormatadas);
-        } catch (err) {
-            console.log("Erro ao carregar faturamento", err);
-        }
-    }
-
-    useEffect(() => {
-        loadSales();
-    }, []);
-
-    useEffect(() => {
-        const socket = io('http://localhost:3333');
-        socket.on('finance_updated', () => {
-            loadSales(); 
-        });
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
-
-    const faturamentoMesAtual = vendasReais.reduce((acc, venda) => acc + venda.valor, 0);
-    const lucroLiquido = faturamentoMesAtual - CUSTO_TOTAL_MES;
-    const noVermelho = lucroLiquido < 0;
-
-    function calcularVendasSelecionadas() {
-        if (!dateRange) return 0;
-        const [start, end] = dateRange;
-
-        return vendasReais.reduce((total, venda) => {
-            if (venda.data >= start && venda.data <= end) {
-                return total + venda.valor;
-            }
-            return total;
-        }, 0);
-    }
-
-    // 🟢 UX: Em vez de texto solto vermelho, criamos uma "badge" bonitinha para os dias que tem venda
-    function renderTileContent({ date, view }: any) {
-        if (view === 'month') {
-            const vendaDia = vendasReais.find(v => isSameDay(v.data, date));
-            if (vendaDia) {
-                return (
-                    <div className="mt-1 flex justify-center">
-                        <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                            R$ {vendaDia.valor}
-                        </span>
-                    </div>
-                );
-            }
-        }
-        return null;
-    }
+    const handlePeriodoChange = (tipo: PeriodoTipo) => {
+        setPeriodoAtivo(tipo);
+        setShowCustomDates(tipo === 'custom');
+    };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-12">
             <Header />
-            
-            {/* 🟢 CSS INJETADO PARA DEIXAR O CALENDÁRIO MODERNO E COMPATÍVEL COM DARK MODE */}
-            <style>{`
-                .react-calendar { width: 100%; border: none !important; background: transparent !important; font-family: inherit !important; }
-                .react-calendar__navigation button { color: inherit !important; min-width: 44px; background: none; font-size: 1.2rem; font-weight: bold; border-radius: 8px; transition: 0.2s; }
-                .react-calendar__navigation button:hover, .react-calendar__navigation button:enabled:hover { background-color: rgba(148, 163, 184, 0.2) !important; }
-                .react-calendar__month-view__weekdays { text-transform: uppercase; font-weight: bold; font-size: 0.75rem; color: #64748b; }
-                .dark .react-calendar__month-view__weekdays { color: #94a3b8; }
-                .react-calendar__tile { color: inherit !important; padding: 12px 8px; border-radius: 12px; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-                .react-calendar__tile:enabled:hover, .react-calendar__tile:enabled:focus { background-color: rgba(148, 163, 184, 0.1) !important; }
-                .react-calendar__tile--now { background: rgba(234, 179, 8, 0.1) !important; border-radius: 12px; }
-                .react-calendar__tile--now:enabled:hover { background: rgba(234, 179, 8, 0.2) !important; }
-                .react-calendar__tile--active { background: #3b82f6 !important; color: white !important; font-weight: bold; border-radius: 12px; }
-                .react-calendar__tile--hasActive { background: #60a5fa !important; }
-                .dark .react-calendar__tile--active { background: #2563eb !important; }
-                .react-calendar__month-view__days__day--weekend { color: #f43f5e !important; }
-                .dark .react-calendar__month-view__days__day--weekend { color: #fb7185 !important; }
-                .react-calendar__month-view__days__day--neighboringMonth { color: #cbd5e1 !important; }
-                .dark .react-calendar__month-view__days__day--neighboringMonth { color: #475569 !important; }
-            `}</style>
 
-            <main className="max-w-[1200px] mx-auto px-4 py-8 md:px-8">
-                
-                <header className="mb-8">
-                    <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Gestão Financeira</h1>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">Acompanhamento de metas e resultados do Boa Viagem Pub</p>
+            <main className="max-w-[1400px] mx-auto px-4 py-8 md:px-8">
+
+                {/* 🟢 CABEÇALHO E FILTROS */}
+                <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+                    <div>
+                        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Visão Geral</h1>
+                        <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">Acompanhe a saúde financeira e operacional do negócio</p>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-3">
+                        {/* Pílulas de Filtro */}
+                        <div className="flex flex-wrap bg-white dark:bg-slate-900 p-1.5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
+                            {['hoje', 'ontem', 'semana', 'mes', 'ano', 'custom'].map((tipo) => (
+                                <button
+                                    key={tipo}
+                                    onClick={() => handlePeriodoChange(tipo as PeriodoTipo)}
+                                    className={`px-4 py-2 rounded-xl font-bold text-sm transition-all duration-300 ${periodoAtivo === tipo
+                                        ? 'bg-blue-600 text-white shadow-md'
+                                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                        }`}
+                                >
+                                    {tipo === 'custom' ? <FiCalendar className="inline-block" /> : tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Campos Customizados Condicionais */}
+                        {showCustomDates && (
+                            <div className="flex items-center gap-2 bg-white dark:bg-slate-900 p-2 rounded-xl border border-slate-200 dark:border-slate-800 animate-in slide-in-from-top-2">
+                                <input type="date" className="bg-transparent border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1 text-sm outline-none" />
+                                <span className="text-slate-400">até</span>
+                                <input type="date" className="bg-transparent border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1 text-sm outline-none" />
+                            </div>
+                        )}
+                    </div>
                 </header>
 
-                {/* 🟢 GRIDS DOS CARDS */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    
-                    {/* CARD 1: Faturamento */}
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                        <div className="flex justify-between items-start mb-4">
-                            <span className="text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider">Faturamento (Mês)</span>
-                            <div className="p-2 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg">
-                                <FiTrendingUp size={20} />
-                            </div>
+                {/* 🟢 CAMADA 1: KPIs Principais (Dinâmicos) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+                    {/* Faturamento */}
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800">
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider">Faturamento</span>
+                            <div className="p-2 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg"><FiDollarSign size={20} /></div>
                         </div>
                         <h2 className="text-3xl font-black text-slate-800 dark:text-white mb-2">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(faturamentoMesAtual)}
+                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(currentData.kpis.fat)}
                         </h2>
-                        <span className="text-sm font-medium text-slate-400 dark:text-slate-500">
-                            Meta de Equilíbrio: <span className="font-bold">R$ {CUSTO_TOTAL_MES.toLocaleString('pt-BR')}</span>
-                        </span>
+                        <div className={`flex items-center gap-1.5 text-sm font-bold ${currentData.kpis.fatCresc >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            {currentData.kpis.fatCresc >= 0 ? <FiTrendingUp /> : <FiTrendingDown />}
+                            <span>{currentData.kpis.fatCresc}% vs ant.</span>
+                        </div>
                     </div>
 
-                    {/* CARD 2: Custo Fixo */}
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                        <div className="flex justify-between items-start mb-4">
-                            <span className="text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider">Custo Operacional</span>
-                            <div className="p-2 bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-lg">
-                                <FiDollarSign size={20} />
-                            </div>
+                    {/* Lucro */}
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800">
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider">Lucro Bruto</span>
+                            <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg"><FiCheckCircle size={20} /></div>
                         </div>
                         <h2 className="text-3xl font-black text-slate-800 dark:text-white mb-2">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(CUSTO_TOTAL_MES)}
+                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(currentData.kpis.lucro)}
                         </h2>
-                        <span className="text-sm font-medium text-slate-400 dark:text-slate-500">
-                            Inclui fixos, variáveis e pessoal
-                        </span>
-                    </div>
-
-                    {/* CARD 3: Lucro/Prejuízo (Muda de cor dinamicamente) */}
-                    <div className={`p-6 rounded-3xl shadow-sm border transition-colors duration-300 ${
-                        noVermelho 
-                        ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50' 
-                        : 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50'
-                    }`}>
-                        <div className="flex justify-between items-start mb-4">
-                            <span className={`font-bold text-sm uppercase tracking-wider ${noVermelho ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                                {noVermelho ? 'Prejuízo Atual' : 'Lucro Líquido'}
-                            </span>
-                            <div className={`p-2 rounded-lg ${noVermelho ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-600' : 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600'}`}>
-                                {noVermelho ? <FiAlertCircle size={20} /> : <FiCheckCircle size={20} />}
-                            </div>
+                        <div className={`flex items-center gap-1.5 text-sm font-bold ${currentData.kpis.lucroCresc >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            {currentData.kpis.lucroCresc >= 0 ? <FiTrendingUp /> : <FiTrendingDown />}
+                            <span>{currentData.kpis.lucroCresc}% vs ant.</span>
                         </div>
-                        <h2 className={`text-3xl font-black mb-2 ${noVermelho ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(lucroLiquido)}
-                        </h2>
-                        <span className={`text-sm font-medium ${noVermelho ? 'text-rose-500/80 dark:text-rose-400/70' : 'text-emerald-600/80 dark:text-emerald-400/70'}`}>
-                            {noVermelho ? 'Ainda não batemos as contas do mês.' : 'Já pagamos tudo! Estamos no azul.'}
-                        </span>
                     </div>
 
+                    {/* Ticket Médio */}
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800">
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider">Ticket Médio</span>
+                            <div className="p-2 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-lg"><FiShoppingBag size={20} /></div>
+                        </div>
+                        <h2 className="text-3xl font-black text-slate-800 dark:text-white mb-2">
+                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(currentData.kpis.ticket)}
+                        </h2>
+                        <div className={`flex items-center gap-1.5 text-sm font-bold ${currentData.kpis.ticketCresc >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            {currentData.kpis.ticketCresc >= 0 ? <FiTrendingUp /> : <FiTrendingDown />}
+                            <span>{currentData.kpis.ticketCresc}% vs ant.</span>
+                        </div>
+                    </div>
+
+                    {/* Clientes */}
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800">
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider">Clientes Atendidos</span>
+                            <div className="p-2 bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-lg"><FiUsers size={20} /></div>
+                        </div>
+                        <h2 className="text-3xl font-black text-slate-800 dark:text-white mb-2">
+                            {currentData.kpis.clientes}
+                        </h2>
+                        <div className={`flex items-center gap-1.5 text-sm font-bold ${currentData.kpis.cliCresc >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            {currentData.kpis.cliCresc >= 0 ? <FiTrendingUp /> : <FiTrendingDown />}
+                            <span>{currentData.kpis.cliCresc}% vs ant.</span>
+                        </div>
+                    </div>
                 </div>
 
-                {/* 🟢 SEÇÃO DO CALENDÁRIO */}
-                <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                    
-                    <div className="flex items-center gap-3 mb-8 border-b border-slate-100 dark:border-slate-800 pb-6">
-                        <div className="p-3 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl">
-                            <FiCalendar size={24} />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-bold text-slate-800 dark:text-white">Calendário de Faturamento</h2>
-                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Selecione um período (arraste ou clique em dois dias) para somar os valores.</p>
-                        </div>
-                    </div>
+                {/* 🟢 CAMADA 2: Produtos e Problemas Operacionais */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                    <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
-                        
-                        {/* Calendário */}
-                        <div className="w-full lg:w-2/3 lg:max-w-xl bg-slate-50 dark:bg-slate-800/30 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
-                            <Calendar
-                                onChange={(value) => setDateRange(value as [Date, Date])}
-                                selectRange={true}
-                                tileContent={renderTileContent}
-                                locale="pt-BR"
-                            />
+                    {/* COLUNA ESQUERDA: Produtos (2/3) */}
+                    <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                🏆 Produtos em Destaque
+                            </h3>
+                            <button
+                                onClick={() => setProdutosModalOpen(true)}
+                                className="text-sm font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 transition-colors"
+                            >
+                                Ver todos
+                            </button>
                         </div>
 
-                        {/* Resultado da Seleção */}
-                        <div className="w-full lg:w-1/3 bg-blue-600 dark:bg-slate-800 rounded-3xl p-8 text-center shadow-lg shadow-blue-600/20 dark:shadow-none relative overflow-hidden flex flex-col justify-center min-h-[350px]">
-                            
-                            {/* Círculos decorativos de fundo */}
-                            <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white/10 blur-2xl"></div>
-                            <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 rounded-full bg-black/10 blur-xl"></div>
+                        <div className="space-y-3">
+                            <div className="grid grid-cols-12 gap-4 px-4 pb-2 border-b border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <div className="col-span-6 md:col-span-5">Produto</div>
+                                <div className="col-span-3 text-center">Vendas</div>
+                                <div className="col-span-4 hidden md:block text-right">Receita</div>
+                            </div>
 
-                            <div className="relative z-10">
-                                <h3 className="text-blue-100 dark:text-slate-400 font-bold uppercase tracking-widest text-sm mb-6">Resultado do Período</h3>
-                                
-                                {dateRange ? (
-                                    <>
-                                        <p className="text-white dark:text-slate-200 font-medium text-lg mb-6 leading-relaxed bg-black/10 dark:bg-slate-900/50 py-2 px-4 rounded-xl inline-block border border-white/10">
-                                            De <span className="font-bold">{format(dateRange[0], "dd 'de' MMM", { locale: ptBR })}</span> <br />
-                                            até <span className="font-bold">{format(dateRange[1], "dd 'de' MMM", { locale: ptBR })}</span>
-                                        </p>
-                                        <h1 className="text-4xl lg:text-5xl font-black text-white dark:text-blue-400 drop-shadow-md">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calcularVendasSelecionadas())}
-                                        </h1>
-                                    </>
-                                ) : (
-                                    <div className="flex flex-col items-center justify-center text-blue-200 dark:text-slate-500 opacity-80">
-                                        <FiCalendar size={48} className="mb-4 opacity-50" />
-                                        <p className="font-medium text-lg max-w-[200px]">Selecione dias no calendário ao lado.</p>
+                            {/* Trocamos a key para forçar a animação ao mudar de período */}
+                            {currentData.produtos.map((produto, index) => (
+                                <div
+                                    key={`${periodoAtivo}-${produto.id}`}
+                                    className="grid grid-cols-12 gap-4 items-center p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2"
+                                    style={{ animationDelay: `${index * 50}ms` }}
+                                >
+                                    <div className="col-span-6 md:col-span-5 flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                            {index + 1}
+                                        </div>
+                                        <span className="font-bold text-slate-800 dark:text-slate-200">{produto.nome}</span>
                                     </div>
-                                )}
+                                    <div className="col-span-3 text-center font-bold text-slate-600 dark:text-slate-400">
+                                        {produto.vendas} un
+                                    </div>
+                                    <div className="col-span-4 hidden md:flex justify-end items-center gap-3">
+                                        <span className="font-bold text-slate-800 dark:text-white">R$ {produto.receita}</span>
+                                        {produto.status === 'lucrativo' ? (
+                                            <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-2 py-1 rounded-md">ALTA MARGEM</span>
+                                        ) : (
+                                            <span className="text-[10px] font-bold bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded-md">ALTO VOLUME</span>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* COLUNA DIREITA: Alertas de Ação (1/3) - Dividido em 3 domínios */}
+                    <div className="flex flex-col gap-6">
+
+                        {/* 1. Alertas de Estoque */}
+                        <div className="bg-rose-50 dark:bg-rose-950/20 p-6 rounded-3xl border border-rose-200 dark:border-rose-900/50">
+                            <h3 className="text-base font-bold text-rose-700 dark:text-rose-400 mb-4 flex items-center gap-2">
+                                <FiPackage /> Estoque Crítico
+                            </h3>
+                            <div className="space-y-3">
+                                {MOCK_ALERTAS.estoque.map(item => (
+                                    <div key={item.id} className="flex justify-between items-center bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border border-rose-100 dark:border-rose-900/30">
+                                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{item.item}</span>
+                                        <span className={`text-xs font-black px-2 py-1 rounded-md ${item.status === 'critico' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600'}`}>
+                                            {item.nivel}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                onClick={() => setEstoqueModalOpen(true)}
+                                className="w-full mt-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold rounded-xl transition-colors"
+                            >
+                                Gerenciar Estoque
+                            </button>
+                        </div>
+
+                        {/* 2. Margem Baixa */}
+                        <div className="bg-orange-50 dark:bg-orange-950/20 p-6 rounded-3xl border border-orange-200 dark:border-orange-900/50">
+                            <h3 className="text-base font-bold text-orange-700 dark:text-orange-400 mb-4 flex items-center gap-2">
+                                <FiLoss /> Margem Baixa
+                            </h3>
+                            <div className="space-y-3">
+                                {MOCK_ALERTAS.margemBaixa.map(item => (
+                                    <div key={item.id} className="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border border-orange-100 dark:border-orange-900/30">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{item.item}</span>
+                                            <span className="text-xs font-black text-orange-600">{item.margem}</span>
+                                        </div>
+                                        <span className="text-xs text-slate-500">{item.motivo}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* 3. Produtos Parados */}
+                        <div className="bg-slate-100 dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+                            <h3 className="text-base font-bold text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-2">
+                                <FiClock /> Produtos Parados
+                            </h3>
+                            <div className="space-y-3">
+                                {MOCK_ALERTAS.parados.map(item => (
+                                    <div key={item.id} className="flex justify-between items-center bg-white dark:bg-slate-950 p-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+                                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{item.item}</span>
+                                        <span className="text-xs font-medium text-slate-500">{item.dias}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
                     </div>
                 </div>
-
             </main>
+
+            {/* ========================================= */}
+            {/* MODAL 1: TODOS OS PRODUTOS                */}
+            {/* ========================================= */}
+            <ModalOverlay isOpen={isProdutosModalOpen} onClose={() => setProdutosModalOpen(false)} title="Ranking Completo de Produtos">
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        placeholder="Pesquisar produto..."
+                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+                <div className="space-y-2">
+                    {/* Lista simulada estendida baseada no mês */}
+                    {[...MOCK_DB.mes.produtos, { id: 99, nome: "Água Mineral", vendas: 45, receita: 135, status: 'volume' }].map((prod, i) => (
+                        <div key={i} className="flex justify-between items-center p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg border-b border-slate-100 dark:border-slate-800 last:border-0">
+                            <div className="flex items-center gap-3">
+                                <span className="text-slate-400 font-bold w-4 text-right">{i + 1}</span>
+                                <span className="font-bold text-slate-700 dark:text-slate-200">{prod.nome}</span>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-sm font-bold text-slate-800 dark:text-slate-100">R$ {prod.receita}</div>
+                                <div className="text-xs text-slate-500">{prod.vendas} unidades</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </ModalOverlay>
+
+            {/* ========================================= */}
+            {/* MODAL 2: GESTÃO DE ESTOQUE RÁPIDA         */}
+            {/* ========================================= */}
+            <ModalOverlay isOpen={isEstoqueModalOpen} onClose={() => setEstoqueModalOpen(false)} title="Ajuste Rápido de Estoque">
+                <div className="bg-rose-50 dark:bg-rose-900/10 p-4 rounded-xl mb-6 flex items-start gap-3">
+                    <FiAlertTriangle className="text-rose-500 shrink-0 mt-0.5" />
+                    <p className="text-sm text-rose-700 dark:text-rose-400">Você tem 2 itens em estado crítico. Atualize o estoque ou solicite compra ao fornecedor.</p>
+                </div>
+
+                <div className="space-y-4">
+                    {MOCK_ALERTAS.estoque.map(item => (
+                        <div key={item.id} className="p-4 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <h4 className="font-bold text-slate-800 dark:text-slate-200">{item.item}</h4>
+                                <span className="text-xs font-bold text-rose-500">Atual: {item.nivel}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input type="number" placeholder="+ Adicionar" className="w-24 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none" />
+                                <button className="px-4 py-2 bg-slate-800 dark:bg-slate-700 text-white font-bold text-sm rounded-lg hover:bg-slate-700">Salvar</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </ModalOverlay>
+
         </div>
     );
 }

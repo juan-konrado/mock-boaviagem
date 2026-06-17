@@ -22,7 +22,7 @@ export default function SignIn() {
 
         try {
             await signIn({ email, password });
-            navigate('/home');
+            navigate('/balcao');
         } catch (err) {
             console.log(err);
             setLoading(false);

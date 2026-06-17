@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 
 import SignIn from './pages/Signln';
-import Home from './pages/Home';
 import Balcao from './pages/Balcao'; // ou './pages/balcao' se você renomeou o arquivo
 import Category from './pages/Category';
 import Product from './pages/Product';
@@ -16,7 +15,6 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SignIn />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/balcao" element={<Balcao />} />
           <Route path="/category" element={<Category />} />
           <Route path="/product" element={<Product />} />
