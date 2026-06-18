@@ -1,0 +1,255 @@
+/* ==========================================
+   LAYOUT GERAL (SPLIT SCREEN)
+========================================== */
+.signin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-main); /* Lado direito pega do bg global */
+    overflow: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ==========================================
+   LADO ESQUERDO: ILUSTRAÇÃO E BRANDING
+========================================== */
+.signin-illustration-side {
+    flex: 1.1; 
+    background-color: var(--bg-card); /* Cor de fundo branca/escura base */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* 🟢 ESTILOS DA NOVA CURVATURA EM S */
+.magic-curve {
+    position: absolute;
+    top: 0;
+    right: -15vw; /* Empurra o SVG para fora do lado esquerdo */
+    width: 15vw;  /* Largura exata da barriga da curva */
+    height: 100vh;
+    color: var(--bg-card); /* Pinta o SVG com a mesma cor do lado esquerdo */
+    z-index: 10;
+    pointer-events: none; /* Ignora cliques para não atrapalhar o formulário */
+}
+
+/* Esconde a ilustração e a curva em telas de celular */
+@media (max-width: 900px) {
+    .signin-illustration-side, .magic-curve {
+        display: none;
+    }
+}
+
+.brand-header {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo-box {
+    width: 40px;
+    height: 40px;
+    background-color: var(--brand-blue);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.brand-name span {
+    color: var(--brand-emerald);
+}
+
+/* O "Mundo" orgânico onde os ícones do Pub ficam flutuando */
+.illustration-blob {
+    width: 450px;
+    height: 450px;
+    background-color: var(--bg-panel);
+    border: 2px solid var(--border-color);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: morph 8s ease-in-out infinite alternate;
+}
+
+@keyframes morph {
+    0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+    100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+
+/* Posição dos ícones flutuantes */
+.floating-item {
+    position: absolute;
+    color: var(--text-secondary);
+    animation: float 6s ease-in-out infinite;
+}
+
+.item-1 { top: 15%; left: 20%; animation-delay: 0s; color: var(--brand-orange); }
+.item-2 { top: 25%; right: 15%; animation-delay: 1s; color: var(--brand-blue); }
+.item-3 { bottom: 20%; left: 15%; animation-delay: 2s; color: var(--brand-emerald); }
+.item-4 { bottom: 30%; right: 20%; animation-delay: 0.5s; }
+.item-center { width: 120px; height: 120px; color: var(--text-primary); }
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+/* ==========================================
+   LADO DIREITO: FORMULÁRIO DE LOGIN
+========================================== */
+.signin-form-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 8%;
+    background-color: var(--bg-main);
+    position: relative;
+    z-index: 5;
+}
+
+.signin-form-wrapper {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease-out;
+    position: relative;
+    z-index: 20; /* Fica acima da barriga da curva se a tela encolher muito */
+}
+
+.form-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 32px;
+    letter-spacing: -1px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.login-input {
+    height: 56px;
+    background-color: var(--bg-input);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0 20px;
+    color: var(--text-primary);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.login-input:focus {
+    border-color: var(--brand-emerald);
+    box-shadow: 0 0 0 4px var(--brand-emerald-light);
+}
+
+.forgot-password {
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-top: -8px;
+    transition: color 0.2s;
+}
+
+.forgot-password:hover {
+    color: var(--brand-emerald);
+    text-decoration: underline;
+}
+
+.btn-login {
+    height: 56px;
+    background-color: var(--brand-emerald);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px var(--brand-emerald-light);
+}
+
+.btn-login:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(0.9);
+}
+
+.btn-login:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.register-link a {
+    color: var(--brand-emerald);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+.terms-footer {
+    position: absolute;
+    bottom: 24px;
+    right: 8%;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.terms-footer:hover {
+    color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,319 @@
+/* ==========================================
+   LAYOUT GERAL DO HISTÓRICO
+========================================== */
+.history-container {
+    padding: 40px 24px;
+    background-color: transparent;
+}
+
+
+
+/* ==========================================
+   CABEÇALHO E FATURAMENTO
+========================================== */
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.history-title {
+    color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.revenue-card {
+    background-color: var(--brand-emerald-light);
+    color: var(--brand-emerald);
+    padding: 16px 24px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.revenue-text {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.revenue-value {
+    font-weight: 900;
+    font-size: 22px;
+}
+
+/* ==========================================
+   BARRA DE FILTROS
+========================================== */
+.filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-panel);
+    padding: 16px 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.filter-input {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    padding: 10px 16px;
+    border-radius: 12px;
+    outline: none;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    color-scheme: dark light;
+    /* Ajuda a adaptar o ícone de calendário nativo do navegador */
+}
+
+.filter-input:focus {
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.btn-clear {
+    background: transparent;
+    color: #ef4444;
+    /* Vermelho padrão */
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.btn-clear:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+}
+
+.filter-count {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   LISTA DE COMANDAS (CARDS)
+========================================== */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.empty-state-text {
+    color: var(--text-secondary);
+    text-align: center;
+    display: block;
+    margin-top: 40px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.order-card-wrapper {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.order-card-wrapper:hover {
+    border-color: var(--brand-blue);
+}
+
+.order-card-header {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.order-card-header:hover {
+    background-color: var(--bg-card);
+}
+
+.card-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-section-right {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    min-width: 120px;
+}
+
+.tag-mesa {
+    background-color: var(--brand-emerald-light);
+    color: var(--brand-emerald);
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-size: 15px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-icon {
+    color: var(--text-secondary);
+}
+
+.info-text {
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.waiter-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.waiter-label {
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.waiter-name {
+    color: var(--brand-blue);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.total-label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+}
+
+.total-value {
+    color: var(--brand-emerald);
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.expand-hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   ITENS DA COMANDA (SANFONA EXPANDIDA)
+========================================== */
+.items-container {
+    background-color: var(--bg-card);
+    padding: 24px;
+    border-top: 1px solid var(--border-color);
+    animation: fadeInDown 0.2s ease-out;
+}
+
+.items-title {
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.item-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.item-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.item-quantity {
+    color: var(--brand-emerald);
+    font-weight: 900;
+    font-size: 16px;
+    min-width: 32px;
+}
+
+.item-name {
+    color: var(--text-primary);
+    flex: 1;
+    margin-left: 12px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.item-price {
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -5,7 +5,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { Layout } from './components/layout/Layout';
 
 // Importando as Páginas (ajuste os caminhos conforme sua refatoração)
-import SignIn from './pages/Signln/Signln';
+import Login from './pages/Login/Login';
 import Balcao from './pages/Balcao/Balcao';
 import Dashboard from './pages/Dashboard/Dashboard';
 import History from './pages/History/History';
@@ -18,7 +18,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {/* Rota Pública (Tela de Login ocupa a tela inteira, sem Sidebar) */}
-          <Route path="/" element={<SignIn />} />
+          <Route path="/" element={<Login />} />
 
           {/* Rotas Privadas (Envolvidas pelo Layout Principal) */}
           <Route element={<Layout />}>

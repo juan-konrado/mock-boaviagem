@@ -39,8 +39,8 @@ export function Sidebar() {
 
     const menuItems = [
         { icon: <FiMonitor />, text: "Frente de Caixa", path: "/balcao" },
-        { icon: <FiPieChart />, text: "Visão Geral", path: "/dashboard" },
-        { icon: <FiList />, text: "Histórico", path: "/historico" },
+        { icon: <FiPieChart />, text: "Estatísticas", path: "/dashboard" },
+        { icon: <FiList />, text: "Histórico Comanda", path: "/historico" },
         { icon: <FiBox />, text: "Produtos", path: "/product" },
         { icon: <FiBox />, text: "Categorias", path: "/category" }
 
