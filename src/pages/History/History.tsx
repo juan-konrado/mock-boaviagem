@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Header } from '../components/Header';
-import { api } from '../services/api';
+import { api } from '../../services/api';
 import { FiFileText, FiUser, FiCalendar, FiDollarSign, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 export type OrderProps = {
@@ -92,7 +91,6 @@ export default function History() {
 
     return (
         <>
-            <Header />
             <div style={styles.container}>
                 <main style={styles.main}>
 

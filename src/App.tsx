@@ -1,26 +1,35 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 
-import SignIn from './pages/Signln';
-import Balcao from './pages/Balcao'; // ou './pages/balcao' se você renomeou o arquivo
-import Category from './pages/Category';
-import Product from './pages/Product';
-import EditProduct from './pages/EditProduct';
-import Dashboard from './pages/Dashboard';
-import History from './pages/History';
+// Importando o Layout Global
+import { Layout } from './components/layout/Layout';
+
+// Importando as Páginas (ajuste os caminhos conforme sua refatoração)
+import SignIn from './pages/Signln/Signln';
+import Balcao from './pages/Balcao/Balcao';
+import Dashboard from './pages/Dashboard/Dashboard';
+import History from './pages/History/History';
+import Product from './pages/Product/Product';
+import Category from './pages/Category/Category';
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Rota Pública (Tela de Login ocupa a tela inteira, sem Sidebar) */}
           <Route path="/" element={<SignIn />} />
-          <Route path="/balcao" element={<Balcao />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="/edit-product" element={<EditProduct />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/historico" element={<History />} />
+
+          {/* Rotas Privadas (Envolvidas pelo Layout Principal) */}
+          <Route element={<Layout />}>
+            <Route path="/balcao" element={<Balcao />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/historico" element={<History />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/category" element={<Category />} />
+            {/* Adicione as demais rotas aqui (Category, EditProduct, etc) */}
+          </Route>
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>

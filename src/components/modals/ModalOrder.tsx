@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { FiX, FiPlus, FiCheckSquare, FiArrowLeft, FiUser, FiShoppingCart } from 'react-icons/fi';
-import { api } from '../services/api';
-import type { OrderItemProps, OrderProps } from '../pages/Balcao';
+import { api } from '../../services/api';
+import type { OrderItemProps, OrderProps } from '../../pages/Balcao/Balcao';
 
 interface ModalOrderProps {
     isOpen: boolean;
@@ -10,6 +10,7 @@ interface ModalOrderProps {
     tableId: string | null;
     orders: OrderProps[];
 }
+
 
 const customStyles = {
     content: {

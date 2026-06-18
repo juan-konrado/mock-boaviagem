@@ -1,6 +1,5 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
-import { api } from '../services/api';
-import { Header } from '../components/Header';
+import { api } from '../../services/api';
 
 type CategoryProps = {
     id: string;
@@ -93,7 +92,6 @@ export default function Product() {
 
     return (
         <>
-            <Header />
             <div style={styles.container}>
                 <main style={styles.main}>
                     <h1 style={styles.title}>Novo Produto</h1>

@@ -1,6 +1,6 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
-import { api } from '../services/api';
-import { Header } from '../components/Header';
+import { api } from '../../services/api';
+import { Header } from '../../components/Header';
 
 type CategoryProps = { id: string; name: string; }
 

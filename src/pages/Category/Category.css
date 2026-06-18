@@ -1,0 +1,144 @@
+/* ==========================================
+   LAYOUT GERAL DA TELA DE CATEGORIAS
+========================================== */
+.category-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 24px;
+    /* A cor de fundo principal já é herdada do layout global, 
+       mas caso a tela fique isolada, o fallback garante a leitura correta. */
+    background-color: transparent;
+}
+
+.category-main {
+    background-color: var(--bg-panel);
+    padding: 40px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 600px;
+    /* Reduzi um pouco a largura máxima para formulários ficarem mais elegantes */
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+/* ==========================================
+   TIPOGRAFIA
+========================================== */
+.category-title {
+    color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 32px;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.category-subtitle {
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* ==========================================
+   FORMULÁRIO E INPUTS
+========================================== */
+.category-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.category-input {
+    height: 56px;
+    /* Altura moderna para áreas de toque fáceis */
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0 20px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.category-input:focus {
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.category-button {
+    height: 56px;
+    background-color: var(--brand-emerald);
+    /* Mantive a intenção do seu verde original de sucesso */
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s ease;
+}
+
+.category-button:hover {
+    filter: brightness(0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--brand-emerald-light);
+}
+
+/* ==========================================
+   LISTA DE CATEGORIAS
+========================================== */
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.category-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-card);
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.category-list-item:hover {
+    border-color: var(--brand-blue);
+    background-color: rgba(59, 130, 246, 0.02);
+}
+
+.category-item-text {
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.category-delete-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 8px;
+    color: #ef4444;
+    /* Vermelho padrão para ações destrutivas */
+    transition: all 0.2s ease;
+}
+
+.category-delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+}

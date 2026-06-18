@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import { FiX, FiCheckSquare, FiUser } from 'react-icons/fi';
-import { api } from '../services/api';
+import { api } from '../../services/api';
 
 interface ModalNewOrderProps {
     isOpen: boolean;
