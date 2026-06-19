@@ -1,0 +1,149 @@
+/* ==========================================
+   LAYOUT GERAL DO ESTOQUE
+========================================== */
+.inventory-container {
+    padding: 40px 24px;
+    background-color: transparent;
+    min-height: 100vh;
+}
+
+.inventory-main {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.inventory-title {
+    color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.inventory-subtitle {
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* ==========================================
+   BARRA DE AÇÕES (FILTROS)
+========================================== */
+.inventory-actions {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    background-color: var(--bg-panel);
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+/* ==========================================
+   LISTA DE INSUMOS (ESTILO TABELA MODERNA)
+========================================== */
+.inventory-list-wrapper {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.inventory-list-header {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr auto;
+    gap: 16px;
+    padding: 16px 24px;
+    background-color: var(--bg-input);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.inventory-item-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.inventory-item-row:last-child {
+    border-bottom: none;
+}
+
+.inventory-item-row:hover {
+    background-color: rgba(59, 130, 246, 0.02);
+}
+
+.insumo-name-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.insumo-name {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.insumo-unit {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    padding: 2px 8px;
+    border-radius: 6px;
+    align-self: flex-start;
+}
+
+.insumo-stock {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-primary);
+}
+
+.stock-critical { color: #ef4444; }
+.stock-warning { color: #f97316; }
+.stock-good { color: var(--brand-emerald); }
+
+.insumo-cost {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background-color: var(--bg-input);
+    border-color: var(--border-color);
+    color: var(--brand-blue);
+}

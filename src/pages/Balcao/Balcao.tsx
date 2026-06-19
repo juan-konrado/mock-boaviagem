@@ -70,17 +70,23 @@ export default function Balcao() {
 
     useEffect(() => {
         const socket = io('http://localhost:3333');
-        socket.on('orders_updated', refreshOrders);
+        socket.on('orders_updated', handleNewOrderCreated);
         return () => { socket.disconnect(); };
     }, []);
 
-    async function refreshOrders() {
-        try {
-            const response = await api.get('/orders');
-            setActiveOrders(response.data);
-        } catch (err) {
-            console.error("Erro ao atualizar pedidos", err);
-        }
+    // 🟢 NOVA LÓGICA NO BALCAO.TSX
+    function handleNewOrderCreated(newOrder: OrderProps) {
+        // 1. Adiciona a nova comanda à tela na mesma hora
+        const updatedOrders = [...activeOrders, newOrder];
+        setActiveOrders(updatedOrders);
+
+        // 2. Filtra quem está na mesa criada para jogar dentro do Modal de Detalhes
+        const clientesNaMesa = updatedOrders.filter(order => order.tableId === newOrder.tableId);
+
+        // 3. Abre o Modal Principal (ModalOrder) com a mesa e os clientes atrelados
+        setModalTable(newOrder.tableId);
+        setModalOrders(clientesNaMesa);
+        setModalVisible(true); // <--- Isso aqui abre o modal principal automaticamente!
     }
 
     function handleOpenDetails(tableId: string | null, orders: OrderProps[]) {
@@ -97,6 +103,16 @@ export default function Balcao() {
     function handleOpenNewAvulsa() {
         setNewTableNumber(null);
         setModalNewVisible(true);
+    }
+
+    function handleOrderFinished(orderId: string) {
+        // Filtra e remove a comanda paga da tela
+        const updatedOrders = activeOrders.filter(order => order.id !== orderId);
+        setActiveOrders(updatedOrders);
+
+        // Se o modal estiver aberto, atualiza a lista de clientes dele em tempo real
+        const remainingOrdersInTable = modalOrders.filter(order => order.id !== orderId);
+        setModalOrders(remainingOrdersInTable);
     }
 
     const searchLower = search.toLowerCase();
@@ -120,6 +136,28 @@ export default function Balcao() {
             return order.name?.toLowerCase().includes(searchLower);
         });
     }, [searchLower, activeOrders]);
+
+
+    function handleAddClientToTable(clientName: string, tableId: string) {
+        const isAvulsa = !tableId; // Se tableId for vazio, significa que é um cliente de balcão.
+
+        const newOrder: OrderProps = {
+            id: Math.random().toString(36).substr(2, 9),
+            tableId: isAvulsa ? null : tableId,
+            name: clientName,
+            total: 0,
+            status: 'Aberto',
+            table: isAvulsa ? undefined : { number: tableId }
+        };
+
+        // 1. Adiciona o cliente na memória global da tela
+        const updatedOrders = [...activeOrders, newOrder];
+        setActiveOrders(updatedOrders);
+
+        // 2. Atualiza os clientes que estão sendo visualizados AGORA no Modal aberto
+        const clientesNestaMesa = updatedOrders.filter(order => order.tableId === tableId);
+        setModalOrders(clientesNestaMesa);
+    }
 
     return (
         <div className="balcao-layout">
@@ -229,6 +267,8 @@ export default function Balcao() {
                         onRequestClose={() => setModalVisible(false)}
                         tableId={modalTable}
                         orders={modalOrders}
+                        onFinishOrder={handleOrderFinished}
+                        onAddClientToTable={handleAddClientToTable}
                     />
                 )}
 
@@ -237,7 +277,7 @@ export default function Balcao() {
                         isOpen={modalNewVisible}
                         onRequestClose={() => setModalNewVisible(false)}
                         tableNumber={newTableNumber}
-                        onSuccess={refreshOrders}
+                        onSuccess={handleNewOrderCreated}
                     />
                 )}
             </div>

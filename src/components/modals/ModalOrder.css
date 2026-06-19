@@ -1,0 +1,386 @@
+/* ==========================================
+   OVERLAY E CAIXA DO MODAL
+========================================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+    background-color: var(--bg-panel);
+    width: 95%;
+    max-width: 600px;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    position: relative;
+    outline: none;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* ==========================================
+   CABEÇALHOS E TÍTULOS
+========================================== */
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.btn-back {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.btn-back:hover {
+    background: var(--brand-blue);
+    color: white;
+    border-color: var(--brand-blue);
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* ==========================================
+   LISTA DE CLIENTES NA MESA
+========================================== */
+.clients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.client-btn {
+    background-color: var(--bg-card);
+    border: 2px solid var(--border-color);
+    padding: 16px 20px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.client-btn:hover {
+    border-color: var(--brand-blue);
+    background-color: rgba(59, 130, 246, 0.05);
+    transform: translateY(-2px);
+}
+
+.client-icon-box {
+    background-color: var(--brand-blue-light, rgba(59, 130, 246, 0.1));
+    color: var(--brand-blue);
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.client-name {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   ITENS DA COMANDA E TOTAIS
+========================================== */
+.items-list {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.item-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.item-qtd {
+    color: var(--brand-emerald);
+    font-weight: 900;
+    min-width: 32px;
+}
+
+.item-name {
+    flex: 1;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.item-price {
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.total-display {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--text-primary);
+    text-align: right;
+    margin: 0 0 24px 0;
+}
+
+.total-display span {
+    color: var(--brand-emerald);
+}
+
+/* ==========================================
+   BOTÕES DE AÇÃO
+========================================== */
+.actions-row {
+    display: flex;
+    gap: 16px;
+    margin-top: auto;
+}
+
+.btn-add-product {
+    flex: 1;
+    background-color: transparent;
+    color: var(--brand-blue);
+    border: 2px solid var(--brand-blue);
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.btn-add-product:hover {
+    background-color: var(--brand-blue);
+    color: white;
+}
+
+.btn-close-account {
+    flex: 1;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.btn-close-account:hover {
+    background-color: #dc2626;
+}
+
+/* ==========================================
+   FORMULÁRIOS (ADD E PAGAMENTO)
+========================================== */
+.form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: -8px;
+}
+
+.form-select,
+.form-input {
+    width: 100%;
+    height: 52px;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-select:focus,
+.form-input:focus {
+    border-color: var(--brand-blue);
+}
+
+.btn-confirm-action {
+    width: 100%;
+    background-color: var(--brand-emerald);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    transition: 0.2s;
+}
+
+.btn-confirm-action:hover {
+    filter: brightness(0.9);
+    transform: translateY(-2px);
+}
+
+/* Custom Scrollbar interna */
+.clients-list::-webkit-scrollbar,
+.items-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.clients-list::-webkit-scrollbar-thumb,
+.items-list::-webkit-scrollbar-thumb {
+    background-color: var(--border-hover);
+    border-radius: 10px;
+}
+
+
+/* ==========================================
+   ADICIONAR NOVO CLIENTE NA MESA
+========================================== */
+.btn-add-client {
+    background-color: transparent;
+    border: 2px dashed var(--border-hover);
+    color: var(--text-secondary);
+    padding: 16px 20px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.btn-add-client:hover {
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.add-client-form {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.add-client-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-cancel-client {
+    flex: 1;
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancel-client:hover {
+    background-color: var(--border-hover);
+    color: var(--text-primary);
+}
+
+.btn-confirm-client {
+    flex: 1;
+    background-color: var(--brand-blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-confirm-client:hover {
+    background-color: var(--brand-blue-hover);
+}

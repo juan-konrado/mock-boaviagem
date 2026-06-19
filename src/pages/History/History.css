@@ -6,7 +6,10 @@
     background-color: transparent;
 }
 
-
+.history-main {
+    max-width: 900px;
+    margin: 0 auto;
+}
 
 /* ==========================================
    CABEÇALHO E FATURAMENTO
@@ -51,7 +54,7 @@
 }
 
 /* ==========================================
-   BARRA DE FILTROS
+   BARRA DE FILTROS (Novo Padrão)
 ========================================== */
 .filter-bar {
     display: flex;
@@ -66,53 +69,64 @@
     gap: 16px;
 }
 
-.filter-group {
+.filters-wrapper {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
-.filter-label {
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--bg-input);
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    gap: 4px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    background: transparent;
     color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.filter-btn:hover {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    background-color: var(--brand-blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .filter-input {
     background-color: var(--bg-input);
     color: var(--text-primary);
     border: 2px solid var(--border-color);
-    padding: 10px 16px;
+    padding: 8px 16px;
     border-radius: 12px;
     outline: none;
     font-family: inherit;
     font-weight: 600;
     transition: all 0.2s ease;
     color-scheme: dark light;
-    /* Ajuda a adaptar o ícone de calendário nativo do navegador */
 }
 
 .filter-input:focus {
     border-color: var(--brand-blue);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-}
-
-.btn-clear {
-    background: transparent;
-    color: #ef4444;
-    /* Vermelho padrão */
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    padding: 10px 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 700;
-    transition: all 0.2s ease;
-}
-
-.btn-clear:hover {
-    background-color: rgba(239, 68, 68, 0.1);
-    border-color: #ef4444;
 }
 
 .filter-count {
