@@ -42,7 +42,9 @@ export function Sidebar() {
         { icon: <FiPieChart />, text: "Estatísticas", path: "/dashboard" },
         { icon: <FiList />, text: "Histórico Comanda", path: "/historico" },
         { icon: <FiBox />, text: "Produtos", path: "/product" },
-        { icon: <FiBox />, text: "Categorias", path: "/category" }
+        { icon: <FiBox />, text: "Categorias", path: "/category" },
+        { icon: <FiBox />, text: "Configuração", path: "/settings" }
+
 
     ];
 

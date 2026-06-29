@@ -1,165 +1,160 @@
 @import "tailwindcss";
 
-/* ESSA LINHA FAZ O DARK MODE DO BOTÃO FUNCIONAR NO TAILWIND V4 */
-@custom-variant dark (&:is(.dark *));
-
-/* Opcional: Scrollbar elegante */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 20px;
-}
-
-/* ... Mantenha o restante das suas animações intactas abaixo ... */
 /* =========================================
-   ANIMAÇÕES DO CAMPO FLUTUANTE (20 ELEMENTOS / MAIOR CONTRASTE)
+   VARIÁVEIS GLOBAIS DE TEMA (index.css)
    ========================================= */
-.node-a {
-  top: 5%;
-  left: 5%;
-  animation: floatSlow 28s infinite linear;
-  position: absolute;
+
+/* 🟢 MODO CLARO (Fundos Neutros e Limpos) */
+:root {
+  /* Fundos Neutros */
+  --bg-main: #f1f5f9;
+  --bg-panel: #ffffff;
+  --bg-input: #f8fafc;
+  --bg-card: #ffffff;
+
+  /* Textos */
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+
+  /* Bordas Gerais */
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+
+  /* 🎨 PALETA 1: ORIGINAL (Azul Padrão) */
+  --brand-blue: #3b82f6;
+  --brand-blue-hover: #2563eb;
+  /* Variações Suaves Solicitadas */
+  --brand-blue-light: rgba(59, 130, 246, 0.1);
+  --brand-blue-border: rgba(59, 130, 246, 0.2);
+
+  /* Outros Destaques */
+  --brand-emerald: #10b981;
+  --brand-emerald-light: rgba(16, 185, 129, 0.15);
+  --brand-orange: #f97316;
+  --brand-orange-light: rgba(249, 115, 22, 0.15);
 }
 
-.node-b {
-  top: 20%;
-  right: 8%;
-  animation: rotateFloat 30s infinite alternate-reverse ease-in-out;
-  position: absolute;
+/* 🟢 MODO ESCURO (Slate/Noturno Estável) */
+:root.dark {
+  --bg-main: #0f172a;
+  --bg-panel: rgba(30, 41, 59, 0.7);
+  --bg-input: rgba(15, 23, 42, 0.8);
+  --bg-card: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+
+  --border-color: rgba(51, 65, 85, 0.5);
+  --border-hover: #475569;
+
+  /* Mantém as variações da Paleta Original no modo escuro */
+  --brand-blue: #3b82f6;
+  --brand-blue-hover: #2563eb;
+  --brand-blue-light: rgba(59, 130, 246, 0.15);
+  --brand-blue-border: rgba(59, 130, 246, 0.25);
+
+  --brand-orange-light: rgba(249, 115, 22, 0.2);
+  --brand-emerald-light: rgba(16, 185, 129, 0.2);
 }
 
-.node-c {
-  bottom: 15%;
-  left: 10%;
-  animation: pulseFloat 20s infinite alternate ease-in-out;
-  position: absolute;
+/* =========================================
+   PALETAS DE CORES CUSTOMIZADAS (THEMES)
+   ========================================= */
+
+/* 🎨 TEMA 2: ROXO / CRIATIVA */
+/* Modo Claro */
+:root[data-theme="purple"] {
+  --brand-blue: #8b5cf6;
+  --brand-blue-hover: #7c3aed;
+  /* Variações Suaves Adaptadas para o Roxo */
+  --brand-blue-light: rgba(139, 92, 246, 0.1);
+  --brand-blue-border: rgba(139, 92, 246, 0.2);
+
+  --brand-emerald: #c084fc;
+  --brand-emerald-light: rgba(192, 132, 252, 0.15);
 }
 
-.node-d {
-  top: 45%;
-  right: 2%;
-  animation: floatSlowReverse 32s infinite linear;
-  position: absolute;
+/* Modo Escuro */
+:root.dark[data-theme="purple"] {
+  --brand-blue: #a855f7;
+  --brand-blue-hover: #c084fc;
+  /* Variações Suaves Adaptadas para o Roxo Noturno */
+  --brand-blue-light: rgba(168, 85, 247, 0.15);
+  --brand-blue-border: rgba(168, 85, 247, 0.25);
+
+  --brand-emerald: #d8b4fe;
+  --brand-emerald-light: rgba(216, 180, 254, 0.15);
 }
 
-.node-e {
-  bottom: 8%;
-  left: 40%;
-  animation: rotateFloatVertical 38s infinite linear;
-  position: absolute;
+/* 🎨 TEMA 3: SÓBRIA / DARK OCEAN */
+/* Modo Claro */
+:root[data-theme="dark-ocean"] {
+  --brand-blue: #0f172a;
+  --brand-blue-hover: #1e293b;
+  /* Variações Suaves Adaptadas para Slate Escuro */
+  --brand-blue-light: rgba(15, 23, 42, 0.08);
+  --brand-blue-border: rgba(15, 23, 42, 0.15);
+
+  --brand-emerald: #475569;
+  --brand-emerald-light: rgba(71, 85, 105, 0.15);
 }
 
-.node-f {
-  top: 70%;
-  left: 5%;
-  animation: floatSlowVerticalReverse 35s infinite linear;
-  position: absolute;
+/* Modo Escuro */
+:root.dark[data-theme="dark-ocean"] {
+  --brand-blue: #cbd5e1;
+  --brand-blue-hover: #f1f5f9;
+  /* Variações Suaves Adaptadas para Slate Claro */
+  --brand-blue-light: rgba(203, 213, 225, 0.1);
+  --brand-blue-border: rgba(203, 213, 225, 0.2);
+
+  --brand-emerald: #94a3b8;
+  --brand-emerald-light: rgba(148, 163, 184, 0.15);
 }
 
-.node-g {
-  top: 15%;
-  left: 30%;
-  animation: pulseFloatReverse 22s infinite alternate ease-in-out;
-  position: absolute;
+/* 🎨 TEMA 4: VERDE / VIBRANTE */
+/* Modo Claro */
+:root[data-theme="green"] {
+  --brand-blue: #749d3d;
+  --brand-blue-hover: #5c7f2f;
+  --brand-blue-light: rgba(116, 157, 61, 0.1);
+  --brand-blue-border: rgba(116, 157, 61, 0.2);
+
+  --brand-emerald: #92c44e;
+  --brand-emerald-light: rgba(146, 196, 78, 0.15);
 }
 
-.node-h {
-  bottom: 12%;
-  right: 18%;
-  animation: rotateFloatVerticalReverse 40s infinite linear;
-  position: absolute;
+/* Modo Escuro */
+:root.dark[data-theme="green"] {
+  --brand-blue: #8bbe49;
+  --brand-blue-hover: #9dcd5c;
+  --brand-blue-light: rgba(139, 190, 73, 0.15);
+  --brand-blue-border: rgba(139, 190, 73, 0.25);
+
+  --brand-emerald: #aae063;
+  --brand-emerald-light: rgba(170, 224, 99, 0.2);
 }
 
-.node-i {
-  top: 85%;
-  right: 10%;
-  animation: floatSlowHorizontalReverse 30s infinite linear;
-  position: absolute;
+/* 🎨 TEMA 5: AMARELO / GEMA */
+/* Modo Claro */
+:root[data-theme="yellow"] {
+  --brand-blue: #ff9f1c;
+  --brand-blue-hover: #e68a00;
+  --brand-blue-light: rgba(255, 159, 28, 0.1);
+  --brand-blue-border: rgba(255, 159, 28, 0.2);
+
+  --brand-emerald: #ffb703;
+  --brand-emerald-light: rgba(255, 183, 3, 0.15);
 }
 
-.node-j {
-  top: 40%;
-  left: -2%;
-  animation: rotateFloatHorizontal 33s infinite linear;
-  position: absolute;
-}
+/* Modo Escuro */
+:root.dark[data-theme="yellow"] {
+  --brand-blue: #ffb703;
+  --brand-blue-hover: #ffc334;
+  --brand-blue-light: rgba(255, 183, 3, 0.15);
+  --brand-blue-border: rgba(255, 183, 3, 0.25);
 
-/* Novos nodes para preencher a tela */
-.node-k {
-  top: 10%;
-  right: 25%;
-  animation: floatSlow 35s infinite linear;
-  position: absolute;
-}
-
-.node-l {
-  top: 35%;
-  left: 15%;
-  animation: rotateFloatVertical 28s infinite alternate-reverse;
-  position: absolute;
-}
-
-.node-m {
-  bottom: 25%;
-  right: 5%;
-  animation: pulseFloat 25s infinite ease-in-out;
-  position: absolute;
-}
-
-.node-n {
-  top: 55%;
-  left: 25%;
-  animation: rotateFloat 31s infinite linear;
-  position: absolute;
-}
-
-.node-o {
-  bottom: 5%;
-  right: 35%;
-  animation: floatSlowReverse 29s infinite ease-in-out;
-  position: absolute;
-}
-
-.node-p {
-  top: 25%;
-  left: 45%;
-  animation: rotateFloatHorizontal 34s infinite alternate;
-  position: absolute;
-}
-
-.node-q {
-  top: 60%;
-  right: 30%;
-  animation: floatSlowVerticalReverse 27s infinite linear;
-  position: absolute;
-}
-
-.node-r {
-  bottom: 35%;
-  left: -5%;
-  animation: pulseFloatReverse 36s infinite alternate;
-  position: absolute;
-}
-
-.node-s {
-  top: 5%;
-  left: 65%;
-  animation: rotateFloatVerticalReverse 32s infinite linear;
-  position: absolute;
-}
-
-.node-t {
-  bottom: 45%;
-  right: -2%;
-  animation: floatSlowHorizontalReverse 38s infinite linear;
-  position: absolute;
+  --brand-emerald: #ffd166;
+  --brand-emerald-light: rgba(255, 209, 102, 0.2);
 }
 
 /* Opacidades ajustadas para 0.15 no mínimo e 0.30 no máximo (maior contraste) */
@@ -329,67 +324,4 @@
 
 body {
   margin: 0;
-}
-
-/* Customização do Calendário do Bar */
-.meu-calendario-pub {
-  background-color: #1d1d2e;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
-  font-family: inherit;
-  width: 100%;
-}
-
-.react-calendar__navigation button {
-  color: white;
-  min-width: 44px;
-  background: none;
-  font-size: 16px;
-  margin-top: 8px;
-}
-
-.react-calendar__navigation button:enabled:hover,
-.react-calendar__navigation button:enabled:focus {
-  background-color: #3fffa3;
-  color: black;
-  border-radius: 4px;
-}
-
-.react-calendar__month-view__weekdays {
-  color: #8a8a8a;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.react-calendar__tile {
-  background: none;
-  color: white;
-  padding: 15px 5px;
-  height: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  border: 1px solid #101026;
-}
-
-.react-calendar__tile:enabled:hover,
-.react-calendar__tile:enabled:focus {
-  background-color: #3fffa3;
-  color: black;
-  border-radius: 4px;
-}
-
-.react-calendar__tile--active,
-.react-calendar__tile--hasActive {
-  background: #3fffa3 !important;
-  color: black !important;
-  border-radius: 4px;
-}
-
-.react-calendar__tile--active p {
-  color: black !important;
 }

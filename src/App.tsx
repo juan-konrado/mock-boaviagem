@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import History from './pages/History/History';
 import Product from './pages/Product/Product';
 import Category from './pages/Category/Category';
+import Settings from './pages/Settings/Settings';
 
 export default function App() {
   return (
@@ -27,6 +28,8 @@ export default function App() {
             <Route path="/historico" element={<History />} />
             <Route path="/product" element={<Product />} />
             <Route path="/category" element={<Category />} />
+            <Route path="/settings" element={<Settings />} />
+
             {/* Adicione as demais rotas aqui (Category, EditProduct, etc) */}
           </Route>
 

@@ -1,34 +1,4 @@
 /* ==========================================
-   VARIÁVEIS DE TEMA (Design System)
-========================================== */
-:root {
-    --bg-main: #0f172a;
-    /* slate-900 */
-    --bg-panel: rgba(30, 41, 59, 0.7);
-    /* slate-800 com opacidade */
-    --bg-input: rgba(15, 23, 42, 0.8);
-    --bg-card: #1e293b;
-
-    --text-primary: #f8fafc;
-    /* slate-50 */
-    --text-secondary: #94a3b8;
-    /* slate-400 */
-
-    --border-color: rgba(51, 65, 85, 0.5);
-    /* slate-700 */
-    --border-hover: #475569;
-
-    --brand-blue: #3b82f6;
-    --brand-blue-hover: #2563eb;
-
-    --brand-orange: #f97316;
-    --brand-orange-light: rgba(249, 115, 22, 0.2);
-
-    --brand-emerald: #10b981;
-    --brand-emerald-light: rgba(16, 185, 129, 0.2);
-}
-
-/* ==========================================
    LAYOUT PRINCIPAL
 ========================================== */
 .balcao-layout {
@@ -82,7 +52,7 @@
     color: var(--brand-emerald);
     padding: 10px 20px;
     border-radius: 50px;
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    border: 1px solid var(--brand-blue);
 }
 
 .status-dot {
@@ -259,8 +229,8 @@
 }
 
 .table-free:hover {
-    border-color: var(--brand-orange);
-    color: var(--brand-orange);
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
 }
 
 .table-occupied {
@@ -340,8 +310,8 @@
 }
 
 .avulsa-icon {
-    background-color: var(--brand-orange-light);
-    color: var(--brand-orange);
+    background-color: var(--brand-blue-light);
+    color: var(--brand-blue);
     padding: 8px;
     border-radius: 8px;
     display: flex;
