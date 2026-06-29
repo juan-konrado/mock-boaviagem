@@ -23,6 +23,7 @@ export type OrderProps = {
         number?: number | string;
         name?: string;
     };
+    items?: OrderItemProps[];
 }
 
 export type OrderItemProps = {

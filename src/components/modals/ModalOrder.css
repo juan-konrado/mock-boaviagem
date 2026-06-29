@@ -18,12 +18,12 @@
     width: 95%;
     max-width: 600px;
     border-radius: 24px;
-    padding: 15px;
+    padding: 32px;
     border: 1px solid var(--border-color);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
     position: relative;
     outline: none;
-    max-height: 100vh;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
 }
@@ -39,6 +39,7 @@
     padding: 6px;
     border-radius: 8px;
     transition: all 0.2s ease;
+    z-index: 10;
 }
 
 .modal-close-btn:hover {
@@ -84,6 +85,13 @@
     margin: 0;
 }
 
+.modal-subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 500;
+    margin: 4px 0 24px 0;
+}
+
 /* ==========================================
    LISTA DE CLIENTES NA MESA
 ========================================== */
@@ -98,7 +106,6 @@
 .client-btn {
     background-color: var(--bg-card);
     border: 2px solid var(--border-color);
-    margin-top: 10px;
     padding: 16px 20px;
     border-radius: 16px;
     display: flex;
@@ -111,15 +118,18 @@
 
 .client-btn:hover {
     border-color: var(--brand-blue);
-    background-color: rgba(59, 130, 246, 0.05);
+    background-color: var(--brand-blue-light);
     transform: translateY(-2px);
 }
 
 .client-icon-box {
-    background-color: var(--brand-blue-light, rgba(59, 130, 246, 0.1));
+    background-color: var(--brand-blue-light);
     color: var(--brand-blue);
     padding: 10px;
     border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .client-name {
@@ -267,11 +277,13 @@
     font-weight: 600;
     outline: none;
     transition: 0.2s;
+    box-sizing: border-box;
 }
 
 .form-select:focus,
 .form-input:focus {
     border-color: var(--brand-blue);
+    box-shadow: 0 0 0 4px var(--brand-blue-light);
 }
 
 .btn-confirm-action {
@@ -290,25 +302,13 @@
     gap: 8px;
     margin-top: 16px;
     transition: 0.2s;
+    box-shadow: 0 4px 12px var(--brand-emerald-light);
 }
 
 .btn-confirm-action:hover {
     filter: brightness(0.9);
     transform: translateY(-2px);
 }
-
-/* Custom Scrollbar interna */
-.clients-list::-webkit-scrollbar,
-.items-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.clients-list::-webkit-scrollbar-thumb,
-.items-list::-webkit-scrollbar-thumb {
-    background-color: var(--border-hover);
-    border-radius: 10px;
-}
-
 
 /* ==========================================
    ADICIONAR NOVO CLIENTE NA MESA
@@ -333,7 +333,7 @@
 .btn-add-client:hover {
     border-color: var(--brand-blue);
     color: var(--brand-blue);
-    background-color: rgba(59, 130, 246, 0.05);
+    background-color: var(--brand-blue-light);
 }
 
 .add-client-form {
@@ -384,4 +384,24 @@
 
 .btn-confirm-client:hover {
     background-color: var(--brand-blue-hover);
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--border-hover);
+    border-radius: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

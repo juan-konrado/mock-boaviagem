@@ -9,12 +9,10 @@ interface ModalOrderProps {
     onRequestClose: () => void;
     tableId: string | null;
     orders: OrderProps[];
-    // 🟢 ADICIONADO: Função para avisar o Balcão que a conta foi paga
     onFinishOrder: (orderId: string) => void;
     onAddClientToTable: (clientName: string, tableId: string) => void;
 }
 
-// 🟢 MOCK DATA PARA TESTE FRONTEND
 const MOCK_CATEGORIES = [
     { id: '1', name: 'Bebidas' },
     { id: '2', name: 'Porções' }
@@ -31,65 +29,55 @@ const MOCK_PRODUCTS: Record<string, any[]> = {
     ]
 };
 
-export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOrder, onAddClientToTable }: ModalOrderProps) {
+export function ModalOrder({
+    isOpen,
+    onRequestClose,
+    tableId,
+    orders,
+    onFinishOrder,
+    onAddClientToTable
+}: ModalOrderProps) {
     const [selectedOrder, setSelectedOrder] = useState<OrderProps | null>(null);
     const [items, setItems] = useState<OrderItemProps[]>([]);
 
-    // Modos da Tela
     const [isAdding, setIsAdding] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
 
-    // 🟢 ESTADOS DO NOVO CLIENTE
     const [isAddingClient, setIsAddingClient] = useState(false);
     const [newClientName, setNewClientName] = useState('');
 
-    // Formulário de Adicionar Produto
-    const [categories, setCategories] = useState<any[]>(MOCK_CATEGORIES);
+    const [categories] = useState<any[]>(MOCK_CATEGORIES);
     const [products, setProducts] = useState<any[]>([]);
     const [categorySelected, setCategorySelected] = useState(MOCK_CATEGORIES[0].id);
     const [productSelected, setProductSelected] = useState('');
     const [qtdToAdd, setQtdToAdd] = useState('1');
 
-    // Pagamento
     const [paymentMethod, setPaymentMethod] = useState('PIX');
 
-    // ==========================================
-    // SELEÇÃO DE CLIENTE E LISTAGEM
-    // ==========================================
     function handleSelectClient(order: OrderProps) {
         setSelectedOrder(order);
         setIsAdding(false);
         setIsClosing(false);
         setIsAddingClient(false);
-
-        // Mock: Carrega itens pré-existentes se a comanda já tiver (no Balcao)
+        setItems(order.items || []);
     }
 
-    // ==========================================
-    // ADICIONAR CLIENTE
-    // ==========================================
     function handleConfirmNewClient() {
         if (!newClientName.trim()) {
             alert('Digite o nome do cliente!');
             return;
         }
-
-        // Envia para o Balcão criar o card e atualizar a tela
         onAddClientToTable(newClientName, tableId || '');
         setNewClientName('');
         setIsAddingClient(false);
     }
 
-    // ==========================================
-    // ADICIONAR PRODUTOS (MOCK)
-    // ==========================================
     function handleOpenAddMode() {
         setIsAdding(true);
         setIsClosing(false);
         setCategorySelected(MOCK_CATEGORIES[0].id);
     }
 
-    // Troca de Categoria -> Muda os Produtos
     useEffect(() => {
         if (!categorySelected) return;
 
@@ -111,48 +99,39 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
 
         const productInfo = products.find(p => p.id === productSelected);
 
-        const newItem: any = {
-            id: Math.random().toString(), // Mock ID
+        const newItem = {
+            id: Math.random().toString(),
             quantity: Number(qtdToAdd),
-            price: productInfo.price,
-            product: { name: productInfo.name }
-        };
+            orderId: selectedOrder?.id || '',
+            productId: productInfo.id,
+            product: {
+                id: productInfo.id,
+                name: productInfo.name,
+                description: '',
+                price: productInfo.price // 🟢 Preço no lugar certo!
+            }
+        } as OrderItemProps;
 
-        // Adiciona na lista atual de itens
         setItems([...items, newItem]);
-
-        // UX: Volta pra tela de itens automaticamente
         setIsAdding(false);
         setQtdToAdd('1');
     }
 
-    // ==========================================
-    // PAGAMENTO E FECHAMENTO (MOCK)
-    // ==========================================
     function handleFinishOrder() {
         if (!selectedOrder) return;
 
-        // Avisa o Balcão para remover a comanda da tela
         onFinishOrder(selectedOrder.id);
-
-        // Verifica se ainda tem outros clientes na mesma mesa
         const remainingOrders = orders.filter(o => o.id !== selectedOrder.id);
 
         if (remainingOrders.length > 0) {
-            // Se tem mais gente, volta pra lista de clientes
             setSelectedOrder(null);
             setIsClosing(false);
         } else {
-            // Se era o último, fecha o modal (a mesa no Balcão vai ficar escura)
             onRequestClose();
         }
     }
 
-    // ==========================================
-    // CÁLCULOS (CORRIGIDOS)
-    // ==========================================
-    const valorFinal = items.reduce((acc, item) => acc + (Number(item) * Number(item.quantity)), 0);
-
+    const valorFinal = items.reduce((acc, item) => acc + (Number(item.product.price) * Number(item.quantity)), 0);
     return (
         <Modal
             isOpen={isOpen}
@@ -164,7 +143,6 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
                 <FiX size={24} />
             </button>
 
-            {/* TELA 1: LISTA DE CLIENTES DA MESA */}
             {!selectedOrder ? (
                 <>
                     <h2 className="modal-title">{tableId ? `Mesa ${tableId}` : 'Comandas Avulsas'}</h2>
@@ -178,7 +156,6 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
                             </button>
                         ))}
 
-                        {/* MINI-FORMULÁRIO PARA ADICIONAR NOVO CLIENTE */}
                         {isAddingClient ? (
                             <div className="add-client-form">
                                 <input
@@ -191,26 +168,24 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
                                     onKeyDown={(e) => e.key === 'Enter' && handleConfirmNewClient()}
                                 />
                                 <div className="add-client-actions">
-                                    <button className="btn-cancel-client" onClick={() => setIsAddingClient(false)}>Cancelar</button>
-                                    <button className="btn-confirm-client" onClick={handleConfirmNewClient}>Salvar Cliente</button>
+                                    <button type="button" className="btn-cancel-client" onClick={() => setIsAddingClient(false)}>Cancelar</button>
+                                    <button type="button" className="btn-confirm-client" onClick={handleConfirmNewClient}>Salvar Cliente</button>
                                 </div>
                             </div>
                         ) : (
-                            <button className="btn-add-client" onClick={() => setIsAddingClient(true)}>
+                            <button type="button" className="btn-add-client" onClick={() => setIsAddingClient(true)}>
                                 <FiUserPlus size={20} /> Adicionar pessoa na mesa
                             </button>
                         )}
                     </div>
                 </>
             ) : (
-
-                /* TELA 2, 3 e 4: MODO COMANDA SELECIONADA */
                 <>
                     <div className="modal-header">
-                        <button className="btn-back" onClick={() => {
+                        <button type="button" className="btn-back" onClick={() => {
                             if (isClosing) setIsClosing(false);
                             else if (isAdding) setIsAdding(false);
-                            else setSelectedOrder(null); // Volta pra lista de clientes
+                            else setSelectedOrder(null);
                         }}>
                             <FiArrowLeft size={20} />
                         </button>
@@ -219,7 +194,6 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
                         </h2>
                     </div>
 
-                    {/* SUB-TELA: MODO PAGAMENTO */}
                     {isClosing ? (
                         <div className="form-wrapper">
                             <h3 className="total-display">Total: <span>R$ {valorFinal.toFixed(2).replace('.', ',')}</span></h3>
@@ -233,12 +207,10 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
                                 <option value="FIADO">Fiado (Caderneta)</option>
                             </select>
 
-                            <button className="btn-confirm-action" onClick={handleFinishOrder}>
+                            <button type="button" className="btn-confirm-action" onClick={handleFinishOrder}>
                                 <FiDollarSign size={20} /> Confirmar Recebimento
                             </button>
                         </div>
-
-                        /* SUB-TELA: MODO ADICIONAR PRODUTO */
                     ) : isAdding ? (
                         <div className="form-wrapper">
                             <label className="form-label">Categoria</label>
@@ -255,12 +227,10 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
                             <label className="form-label">Quantidade</label>
                             <input type="number" min="1" className="form-input" value={qtdToAdd} onChange={(e) => setQtdToAdd(e.target.value)} />
 
-                            <button className="btn-confirm-action" onClick={handleAddItem}>
+                            <button type="button" className="btn-confirm-action" onClick={handleAddItem}>
                                 <FiShoppingCart size={20} /> Lançar na Comanda
                             </button>
                         </div>
-
-                        /* SUB-TELA: LISTA DE ITENS DA COMANDA (VISÃO PADRÃO) */
                     ) : (
                         <>
                             <div className="items-list custom-scrollbar">
@@ -269,18 +239,17 @@ export function ModalOrder({ isOpen, onRequestClose, tableId, orders, onFinishOr
                                     <div key={item.id} className="item-row">
                                         <span className="item-qtd">{item.quantity}x</span>
                                         <span className="item-name">{item.product.name}</span>
-                                        <span className="item-price">R$ {(Number(item) * item.quantity).toFixed(2).replace('.', ',')}</span>
-                                    </div>
+                                        <span className="item-price">R$ {(Number(item.product.price) * item.quantity).toFixed(2).replace('.', ',')}</span>                                    </div>
                                 ))}
                             </div>
 
                             <h3 className="total-display">Total: <span>R$ {valorFinal.toFixed(2).replace('.', ',')}</span></h3>
 
                             <div className="actions-row">
-                                <button className="btn-add-product" onClick={handleOpenAddMode}>
+                                <button type="button" className="btn-add-product" onClick={handleOpenAddMode}>
                                     <FiPlus size={20} /> Lançar
                                 </button>
-                                <button className="btn-close-account" onClick={() => setIsClosing(true)}>
+                                <button type="button" className="btn-close-account" onClick={() => setIsClosing(true)}>
                                     <FiCheckSquare size={20} /> Fechar Conta
                                 </button>
                             </div>

@@ -7,7 +7,6 @@ interface ModalNewOrderProps {
     isOpen: boolean;
     onRequestClose: () => void;
     tableNumber: string | null;
-    // 🟢 O onSuccess agora recebe o novo cliente gerado pelo frontend
     onSuccess: (newOrder: any) => void;
 }
 
@@ -24,12 +23,10 @@ export function ModalNewOrder({ isOpen, onRequestClose, tableNumber, onSuccess }
 
         setLoading(true);
 
-        // ==========================================
-        // 🟢 MOCK FRONTEND: Simulando a criação no Banco
-        // ==========================================
+        // Simulando a criação no Banco
         setTimeout(() => {
             const mockNewOrder = {
-                id: Math.random().toString(36).substr(2, 9), // Gera um ID aleatório único
+                id: Math.random().toString(36).substr(2, 9),
                 tableId: tableNumber,
                 name: finalName,
                 total: 0,
@@ -40,11 +37,9 @@ export function ModalNewOrder({ isOpen, onRequestClose, tableNumber, onSuccess }
             setClientName('');
             setLoading(false);
 
-            // Avisa o Balcão que a comanda foi criada e manda os dados dela
             onSuccess(mockNewOrder);
             onRequestClose();
-
-        }, 600); // Delay de 600ms para dar a sensação de processamento
+        }, 600);
     }
 
     function handleKeyDown(e: React.KeyboardEvent) {
@@ -57,25 +52,30 @@ export function ModalNewOrder({ isOpen, onRequestClose, tableNumber, onSuccess }
         <Modal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
-            className="modal-box"
+            className="modal-box-new-order"
             overlayClassName="modal-overlay"
         >
-            <button
-                type="button"
-                onClick={onRequestClose}
-                className="modal-close-btn"
-                title="Fechar (Esc)"
-            >
-                <FiX size={24} />
-            </button>
+            {/* 🟢 CABEÇALHO DO MODAL */}
+            <div className="modal-header-new-order">
+                <div>
+                    <h2 className="modal-title">
+                        {isAvulsa ? 'Nova Comanda Avulsa' : `Abrir Mesa ${tableNumber}`}
+                    </h2>
+                    <p className="modal-subtitle">
+                        {isAvulsa ? 'Iniciando atendimento no balcão' : 'Iniciando uma nova comanda'}
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    onClick={onRequestClose}
+                    className="modal-close-btn"
+                    title="Fechar"
+                >
+                    <FiX size={24} />
+                </button>
+            </div>
 
-            <h2 className="modal-title">
-                {isAvulsa ? 'Nova Comanda Avulsa' : `Abrir Mesa ${tableNumber}`}
-            </h2>
-            <p className="modal-subtitle">
-                {isAvulsa ? 'Iniciando atendimento no balcão' : 'Iniciando uma nova comanda'}
-            </p>
-
+            {/* 🟢 CORPO DO MODAL */}
             <div className="input-group">
                 <label className="input-label">
                     Nome do Cliente / Responsável
@@ -95,6 +95,7 @@ export function ModalNewOrder({ isOpen, onRequestClose, tableNumber, onSuccess }
                 </div>
             </div>
 
+            {/* 🟢 RODAPÉ DO MODAL */}
             <button
                 onClick={handleOpenTable}
                 disabled={loading}
