@@ -1,48 +1,91 @@
 /* ==========================================
-   LAYOUT GERAL DA TELA DE CATEGORIAS
+   LAYOUT GERAL
 ========================================== */
 .category-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
     padding: 40px 24px;
-    /* A cor de fundo principal já é herdada do layout global, 
-       mas caso a tela fique isolada, o fallback garante a leitura correta. */
-    background-color: transparent;
+    min-height: 100vh;
 }
 
 .category-main {
-    background-color: var(--bg-panel);
-    padding: 40px;
-    border-radius: 24px;
-    width: 100%;
-    /* Reduzi um pouco a largura máxima para formulários ficarem mais elegantes */
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(10px);
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-/* ==========================================
-   TIPOGRAFIA
-========================================== */
+.category-header {
+    margin-bottom: 32px;
+}
+
 .category-title {
-    color: var(--text-primary);
     font-size: 32px;
     font-weight: 800;
-    margin-top: 0;
-    margin-bottom: 32px;
-    text-align: center;
-    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
 }
 
 .category-subtitle {
-    color: var(--text-primary);
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 48px;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 16px;
+    margin: 0;
+}
+
+/* ==========================================
+   GRID: FORMULÁRIO E LISTA LADO A LADO
+========================================== */
+.category-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    /* Esquerda menor, Direita maior */
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+        /* Fica um embaixo do outro no celular */
+    }
+}
+
+/* ==========================================
+   CARDS
+========================================== */
+.category-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
     border-bottom: 1px solid var(--border-color);
+    padding-bottom: 16px;
+}
+
+.card-header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+    flex: 1;
+}
+
+.card-icon {
+    color: var(--brand-blue);
+    font-size: 20px;
+}
+
+.badge-count {
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 100px;
 }
 
 /* ==========================================
@@ -51,50 +94,97 @@
 .category-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    color: var(--text-secondary);
 }
 
 .category-input {
-    height: 56px;
-    /* Altura moderna para áreas de toque fáceis */
+    width: 100%;
+    height: 48px;
     background-color: var(--bg-input);
     color: var(--text-primary);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    padding: 0 20px;
-    font-size: 16px;
+    padding: 0 16px 0 44px;
+    /* Espaço para o ícone */
+    font-size: 15px;
+    font-weight: 500;
     outline: none;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .category-input:focus {
     border-color: var(--brand-blue);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 4px var(--brand-blue-light, rgba(59, 130, 246, 0.1));
 }
 
 .category-button {
-    height: 56px;
-    background-color: var(--brand-emerald);
-    /* Mantive a intenção do seu verde original de sucesso */
-    color: #ffffff;
+    height: 48px;
+    background-color: var(--brand-blue);
+    color: white;
     border: none;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    margin-top: 8px;
     transition: all 0.2s ease;
 }
 
-.category-button:hover {
-    filter: brightness(0.9);
+.category-button:hover:not(:disabled) {
+    background-color: var(--brand-blue-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--brand-emerald-light);
+}
+
+.category-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ==========================================
-   LISTA DE CATEGORIAS
+   LISTA E ITENS
 ========================================== */
+.category-list-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: var(--border-hover);
+    text-align: center;
+    gap: 12px;
+}
+
+.empty-state p {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
 .category-list {
     display: flex;
     flex-direction: column;
@@ -105,8 +195,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--bg-card);
-    padding: 16px 20px;
+    background-color: var(--bg-input);
+    padding: 12px 16px;
     border-radius: 12px;
     border: 1px solid var(--border-color);
     transition: all 0.2s ease;
@@ -114,13 +204,28 @@
 
 .category-list-item:hover {
     border-color: var(--brand-blue);
-    background-color: rgba(59, 130, 246, 0.02);
+    background-color: var(--bg-panel);
+}
+
+.item-info {
+    display: flex;
+    gap: 12px;
+}
+
+.item-icon-box {
+    background-color: var(--brand-blue-light, rgba(59, 130, 246, 0.1));
+    color: var(--brand-blue);
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .category-item-text {
     color: var(--text-primary);
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .category-delete-btn {
@@ -132,12 +237,21 @@
     justify-content: center;
     padding: 8px;
     border-radius: 8px;
-    color: #ef4444;
-    /* Vermelho padrão para ações destrutivas */
+    color: var(--text-secondary);
     transition: all 0.2s ease;
 }
 
 .category-delete-btn:hover {
+    color: #ef4444;
     background-color: rgba(239, 68, 68, 0.1);
-    transform: scale(1.1);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--border-hover);
+    border-radius: 10px;
 }

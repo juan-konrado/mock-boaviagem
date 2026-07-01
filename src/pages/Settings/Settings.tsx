@@ -87,18 +87,8 @@ export default function Settings() {
                 </header>
 
                 <div className="settings-tabs">
-                    <button
-                        className={`tab-btn ${activeTab === 'appearance' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('appearance')}
-                    >
-                        Aparência
-                    </button>
-                    <button
-                        className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('profile')}
-                    >
-                        Perfil da Empresa
-                    </button>
+                    <button className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>Perfil da Empresa</button>
+                    <button className={`tab-btn ${activeTab === 'appearance' ? 'active' : ''}`} onClick={() => setActiveTab('appearance')} >Aparência</button>
                 </div>
 
                 {/* 🟢 ABA 1: APARÊNCIA E PALETAS */}

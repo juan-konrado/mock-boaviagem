@@ -1,0 +1,415 @@
+.estoque-container {
+    padding: 40px 24px;
+    min-height: 100vh;
+}
+
+.estoque-main {
+    margin: 0 auto;
+}
+
+.estoque-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.estoque-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.estoque-subtitle {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+/* ==========================================
+   SISTEMA DE ABAS
+========================================== */
+.estoque-tabs {
+    display: flex;
+    gap: 16px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    color: var(--brand-blue);
+    border-bottom-color: var(--brand-blue);
+}
+
+/* ==========================================
+   BARRA DE BUSCA E FILTROS
+========================================== */
+.estoque-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    background-color: var(--bg-panel);
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.filters-group {
+    display: flex;
+    gap: 12px;
+    flex: 2;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    padding: 0 16px;
+    height: 44px;
+    border-radius: 12px;
+    font-weight: 600;
+    outline: none;
+    transition: 0.2s;
+    min-width: 150px;
+}
+
+.filter-select:focus {
+    border-color: var(--brand-blue);
+}
+
+/* ==========================================
+   TABELA DE INSUMOS E CATEGORIAS
+========================================== */
+.table-wrapper {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1.5fr auto;
+    gap: 16px;
+    padding: 16px 24px;
+    background-color: var(--bg-input);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1.5fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row:hover {
+    background-color: var(--brand-blue-light);
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.item-name {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.item-category-badge {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    padding: 2px 8px;
+    border-radius: 6px;
+    align-self: flex-start;
+}
+
+.stock-value {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.status-good {
+    color: var(--brand-emerald);
+}
+
+.status-warning {
+    color: var(--brand-orange);
+}
+
+.status-critical {
+    color: #ef4444;
+}
+
+/* ==========================================
+   ACORDEÃO DE FICHAS TÉCNICAS (RECEITAS)
+========================================== */
+.recipe-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.recipe-header:hover {
+    background-color: var(--bg-input);
+}
+
+.recipe-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.recipe-badge {
+    font-size: 12px;
+    background-color: var(--brand-blue-light);
+    color: var(--brand-blue);
+    padding: 4px 12px;
+    border-radius: 100px;
+}
+
+.recipe-body {
+    padding: 0 24px 24px 24px;
+    border-top: 1px dashed var(--border-color);
+    margin-top: 8px;
+    padding-top: 16px;
+}
+
+.ingredient-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.ingredient-row:last-child {
+    border-bottom: none;
+}
+
+.ingredient-qtd {
+    color: var(--brand-orange);
+    font-weight: 800;
+    background-color: var(--brand-orange-light);
+    padding: 4px 12px;
+    border-radius: 8px;
+}
+
+/* ==========================================
+   MODAL DE INSUMO
+========================================== */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+
+
+/* ==========================================
+   BOTÕES DE AÇÃO (TABELA E RECEITA)
+========================================== */
+.btn-delete {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.btn-delete:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    /* Vermelho Alerta */
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background-color: var(--brand-blue-light);
+    color: var(--brand-blue);
+    /* Vermelho Alerta */
+}
+
+
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+/* ==========================================
+   MODAL DE FICHA TÉCNICA (RECEITA)
+========================================== */
+.recipe-composer {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.composer-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.add-ingredient-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 24px;
+}
+
+.btn-add-ingredient {
+    height: 52px;
+    background-color: var(--bg-input);
+    color: var(--brand-blue);
+    border: 2px solid var(--brand-blue);
+    border-radius: 12px;
+    padding: 0 24px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-add-ingredient:hover {
+    background-color: var(--brand-blue);
+    color: white;
+}
+
+/* Lista de Ingredientes na Edição */
+.composition-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.composition-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    padding: 12px 16px;
+    border-radius: 12px;
+}
+
+.composition-item-name {
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.composition-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Input Inline para editar a quantidade direto na lista */
+.inline-qtd-input {
+    width: 80px;
+    height: 36px;
+    background-color: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--brand-orange);
+    font-weight: 900;
+    text-align: center;
+    outline: none;
+    transition: 0.2s;
+}
+
+.inline-qtd-input:focus {
+    border-color: var(--brand-orange);
+}

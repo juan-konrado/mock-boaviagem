@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
-    FiMonitor, FiPieChart, FiList, FiBox,
-    FiLogOut, FiMenu, FiChevronLeft, FiSun, FiMoon
+    FiMonitor, FiPieChart, FiList, FiLogOut, FiMenu, FiChevronLeft, FiSun, FiMoon, FiTag, FiGrid, FiPackage, FiSettings, FiUsers
 } from "react-icons/fi";
 import "./Sidebar.css";
 
@@ -41,9 +40,12 @@ export function Sidebar() {
         { icon: <FiMonitor />, text: "Frente de Caixa", path: "/balcao" },
         { icon: <FiPieChart />, text: "Estatísticas", path: "/dashboard" },
         { icon: <FiList />, text: "Histórico Comanda", path: "/historico" },
-        { icon: <FiBox />, text: "Produtos", path: "/product" },
-        { icon: <FiBox />, text: "Categorias", path: "/category" },
-        { icon: <FiBox />, text: "Configuração", path: "/settings" }
+        { icon: <FiTag />, text: "Produtos", path: "/product" },
+        { icon: <FiGrid />, text: "Categorias", path: "/category" },
+        { icon: <FiPackage />, text: "Estoque", path: "/estoque" },
+        { icon: <FiSettings />, text: "Configuração", path: "/settings" },
+        { icon: <FiUsers />, text: "Equipe", path: "/equipe" },
+        { icon: <FiUsers />, text: "Admin", path: "/admin" },
 
 
     ];

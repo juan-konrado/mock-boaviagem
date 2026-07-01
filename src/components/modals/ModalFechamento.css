@@ -1,0 +1,166 @@
+.modal-box-fechamento {
+    background-color: var(--bg-panel);
+    width: 95%;
+    max-width: 500px;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    outline: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header-fechamento {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.fechamento-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.fechamento-hero {
+    background-color: var(--brand-emerald-light);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.fechamento-label {
+    color: var(--brand-emerald);
+    font-weight: 800;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.fechamento-total {
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--brand-emerald);
+    margin-bottom: 12px;
+}
+
+.fechamento-badges {
+    display: flex;
+    gap: 8px;
+}
+
+.badge-info {
+    background-color: var(--bg-panel);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+}
+
+.fechamento-breakdown {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.breakdown-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-color);
+    color: var(--text-secondary);
+}
+
+.breakdown-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.breakdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+}
+
+.breakdown-row strong {
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.highlight-row {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.highlight-row strong {
+    color: var(--brand-orange);
+}
+
+.fechamento-footer {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-cancel {
+    flex: 1;
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background-color: var(--border-hover);
+    color: var(--text-primary);
+}
+
+.btn-confirm-fechamento {
+    flex: 2;
+    background-color: #ef4444;
+    /* Vermelho para ação de fechamento */
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.2s;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.btn-confirm-fechamento:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+}

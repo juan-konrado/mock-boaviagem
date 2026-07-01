@@ -203,7 +203,7 @@ export default function History() {
                     )}
 
                     {filteredOrders.map(order => {
-                        const identificadorMesa = order.tableId ? order.tableId : 'Balcão/Avulsa';
+                        const identificadorMesa = order.tableId ? order.tableId : 'Avulsa';
                         const isExpanded = expandedOrder === order.id;
 
                         return (

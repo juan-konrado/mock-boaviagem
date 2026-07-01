@@ -13,7 +13,7 @@
 .balcao-container {
     position: relative;
     z-index: 10;
-    width: 100%; 
+    width: 100%;
     margin: 0 auto;
     padding: 32px 24px;
 }
@@ -359,4 +359,89 @@
 .avulsas-list::-webkit-scrollbar-thumb {
     background-color: var(--border-hover);
     border-radius: 20px;
+}
+
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.status-caixa {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.status-caixa.aberto {
+    background-color: var(--brand-emerald-light);
+    color: var(--brand-emerald);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-caixa.fechado {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.status-caixa.aberto .status-dot {
+    box-shadow: 0 0 8px currentColor;
+    animation: pulse 2s infinite;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-caixa-action {
+    height: 50px;
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    border: 2px solid var(--border-color);
+    padding: 0 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-caixa-action:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.btn-caixa-action.btn-abrir {
+    background-color: var(--brand-emerald);
+    color: white;
+    border-color: var(--brand-emerald);
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

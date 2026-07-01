@@ -6,6 +6,7 @@ import { io } from 'socket.io-client';
 // Componentes Reutilizáveis
 import { ModalOrder } from '../../components/modals/ModalOrder';
 import { ModalNewOrder } from '../../components/modals/ModalNewOrder';
+import { ModalFechamento } from '../../components/modals/ModalFechamento';
 
 // Estilos Nativos e API
 import './Balcao.css';
@@ -37,7 +38,7 @@ export type OrderItemProps = {
         description: string;
         price: string | number;
     };
-    order: {
+    order?: {
         id: string;
         name: string | null;
         total: number | string;
@@ -50,12 +51,18 @@ export default function Balcao() {
     const [activeOrders, setActiveOrders] = useState<OrderProps[]>([]);
     const [search, setSearch] = useState('');
 
+    // Estados do Modal Principal (Comanda/Pagamento)
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTable, setModalTable] = useState<string | null>(null);
     const [modalOrders, setModalOrders] = useState<OrderProps[]>([]);
 
+    // Estados do Modal de Nova Comanda
     const [modalNewVisible, setModalNewVisible] = useState(false);
     const [newTableNumber, setNewTableNumber] = useState<string | null>(null);
+
+    // 🟢 ESTADOS DO CAIXA E FECHAMENTO
+    const [isCaixaAberto, setIsCaixaAberto] = useState(true);
+    const [modalFechamentoVisible, setModalFechamentoVisible] = useState(false);
 
     useEffect(() => {
         async function loadOrders() {
@@ -73,25 +80,31 @@ export default function Balcao() {
         const socket = io('http://localhost:3333');
         socket.on('orders_updated', handleNewOrderCreated);
         return () => { socket.disconnect(); };
-    }, []);
+    }, [activeOrders]);
 
-    // 🟢 NOVA LÓGICA NO BALCAO.TSX
+    // 🟢 LÓGICA DE ABRIR/FECHAR CAIXA
+    function handleConfirmarFechamento() {
+        setIsCaixaAberto(false);
+        setModalFechamentoVisible(false);
+    }
+
     function handleNewOrderCreated(newOrder: OrderProps) {
-        // 1. Adiciona a nova comanda à tela na mesma hora
         const updatedOrders = [...activeOrders, newOrder];
         setActiveOrders(updatedOrders);
 
-        // 2. Filtra quem está na mesa criada para jogar dentro do Modal de Detalhes
         const clientesNaMesa = updatedOrders.filter(order => order.tableId === newOrder.tableId);
 
-        // 3. Abre o Modal Principal (ModalOrder) com a mesa e os clientes atrelados
         setModalTable(newOrder.tableId);
         setModalOrders(clientesNaMesa);
-        setModalVisible(true); // <--- Isso aqui abre o modal principal automaticamente!
+        setModalVisible(true);
     }
 
     function handleOpenDetails(tableId: string | null, orders: OrderProps[]) {
         if (orders.length === 0) {
+            if (!isCaixaAberto) {
+                alert("Caixa fechado! Abra o caixa para iniciar novas comandas.");
+                return;
+            }
             setNewTableNumber(tableId);
             setModalNewVisible(true);
             return;
@@ -102,16 +115,18 @@ export default function Balcao() {
     }
 
     function handleOpenNewAvulsa() {
+        if (!isCaixaAberto) {
+            alert("Caixa fechado! Abra o caixa para iniciar novas comandas.");
+            return;
+        }
         setNewTableNumber(null);
         setModalNewVisible(true);
     }
 
     function handleOrderFinished(orderId: string) {
-        // Filtra e remove a comanda paga da tela
         const updatedOrders = activeOrders.filter(order => order.id !== orderId);
         setActiveOrders(updatedOrders);
 
-        // Se o modal estiver aberto, atualiza a lista de clientes dele em tempo real
         const remainingOrdersInTable = modalOrders.filter(order => order.id !== orderId);
         setModalOrders(remainingOrdersInTable);
     }
@@ -138,9 +153,8 @@ export default function Balcao() {
         });
     }, [searchLower, activeOrders]);
 
-
     function handleAddClientToTable(clientName: string, tableId: string) {
-        const isAvulsa = !tableId; // Se tableId for vazio, significa que é um cliente de balcão.
+        const isAvulsa = !tableId;
 
         const newOrder: OrderProps = {
             id: Math.random().toString(36).substr(2, 9),
@@ -151,29 +165,37 @@ export default function Balcao() {
             table: isAvulsa ? undefined : { number: tableId }
         };
 
-        // 1. Adiciona o cliente na memória global da tela
         const updatedOrders = [...activeOrders, newOrder];
         setActiveOrders(updatedOrders);
 
-        // 2. Atualiza os clientes que estão sendo visualizados AGORA no Modal aberto
         const clientesNestaMesa = updatedOrders.filter(order => order.tableId === tableId);
         setModalOrders(clientesNestaMesa);
     }
 
     return (
         <div className="balcao-layout">
-
             <div className="balcao-container">
 
-                {/* CABEÇALHO */}
+                {/* CABEÇALHO COM CONTROLES DE CAIXA */}
                 <header className="balcao-header">
-                    <div>
-                        <h1 className="balcao-title">Frente de Caixa</h1>
-                        <p className="balcao-subtitle">Gerenciamento de mesas e comandas</p>
+                    <div className="header-left">
+                        <div>
+                            <h1 className="balcao-title">Frente de Caixa</h1>
+                            <p className="balcao-subtitle">Gerenciamento de mesas e comandas</p>
+                        </div>
+                        <div className={`status-caixa ${isCaixaAberto ? 'aberto' : 'fechado'}`}>
+                            <span className="status-dot"></span>
+                            {isCaixaAberto ? 'Caixa Aberto' : 'Caixa Fechado'}
+                        </div>
                     </div>
-                    <div className="status-badge">
-                        <div className="status-dot"></div>
-                        <span className="status-text">Caixa Aberto</span>
+
+                    <div className="header-actions">
+                        <button
+                            className={`btn-caixa-action ${!isCaixaAberto ? 'btn-abrir' : ''}`}
+                            onClick={() => isCaixaAberto ? setModalFechamentoVisible(true) : setIsCaixaAberto(true)}
+                        >
+                            {isCaixaAberto ? 'Fechar Caixa' : 'Abrir Caixa'}
+                        </button>
                     </div>
                 </header>
 
@@ -189,7 +211,11 @@ export default function Balcao() {
                             className="search-input"
                         />
                     </div>
-                    <button onClick={handleOpenNewAvulsa} className="btn-new-order">
+                    <button
+                        onClick={handleOpenNewAvulsa}
+                        className="btn-new-order"
+                        disabled={!isCaixaAberto}
+                    >
                         <FiPlus size={24} />
                         Nova Comanda
                     </button>
@@ -279,6 +305,14 @@ export default function Balcao() {
                         onRequestClose={() => setModalNewVisible(false)}
                         tableNumber={newTableNumber}
                         onSuccess={handleNewOrderCreated}
+                    />
+                )}
+
+                {modalFechamentoVisible && (
+                    <ModalFechamento
+                        isOpen={modalFechamentoVisible}
+                        onRequestClose={() => setModalFechamentoVisible(false)}
+                        onConfirmClose={handleConfirmarFechamento}
                     />
                 )}
             </div>

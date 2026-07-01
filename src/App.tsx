@@ -12,6 +12,10 @@ import History from './pages/History/History';
 import Product from './pages/Product/Product';
 import Category from './pages/Category/Category';
 import Settings from './pages/Settings/Settings';
+import Estoque from './pages/Estoque/Estoque';
+import Equipe from './pages/Equipe/Equipe';
+import Admin from './pages/Admin/Admin';
+
 
 export default function App() {
   return (
@@ -29,6 +33,9 @@ export default function App() {
             <Route path="/product" element={<Product />} />
             <Route path="/category" element={<Category />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/estoque" element={<Estoque />} />
+            <Route path="/equipe" element={<Equipe />} />
+            <Route path="/admin" element={<Admin />} />
 
             {/* Adicione as demais rotas aqui (Category, EditProduct, etc) */}
           </Route>
